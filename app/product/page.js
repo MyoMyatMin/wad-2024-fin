@@ -16,7 +16,7 @@ export default function Home() {
   };
 
   async function fetchProducts() {
-    const data = await fetch(`${APIBASE}/product`);
+    const data = await fetch(`/api/product`);
     const p = await data.json();
     const p2 = p.map((product) => {
       product.id = product._id;
@@ -26,14 +26,14 @@ export default function Home() {
   }
 
   async function fetchCategory() {
-    const data = await fetch(`${APIBASE}/category`);
+    const data = await fetch(`/api/category`);
     const c = await data.json();
     setCategory(c);
   }
 
   const createProductOrUpdate = async (data) => {
     if (editMode) {
-      const response = await fetch(`${APIBASE}/product`, {
+      const response = await fetch(`/api/product`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -57,7 +57,7 @@ export default function Home() {
       return;
     }
 
-    const response = await fetch(`${APIBASE}/product`, {
+    const response = await fetch(`/api/product`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -90,7 +90,7 @@ export default function Home() {
   const deleteById = (id) => async () => {
     if (!confirm("Are you sure?")) return;
 
-    const response = await fetch(`${APIBASE}/product/${id}`, {
+    const response = await fetch(`/api/product/${id}`, {
       method: "DELETE",
     });
 
@@ -178,7 +178,13 @@ export default function Home() {
                 {editMode && (
                   <button
                     onClick={() => {
-                      reset({ code: "", name: "", description: "", price: "", category: "" });
+                      reset({
+                        code: "",
+                        name: "",
+                        description: "",
+                        price: "",
+                        category: "",
+                      });
                       setEditMode(false);
                     }}
                     className="ml-2 bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full"
@@ -195,10 +201,16 @@ export default function Home() {
           <ul className="list-disc ml-8">
             {products.map((p) => (
               <li key={p._id}>
-                <button className="border border-black p-1/2" onClick={startEdit(p)}>
+                <button
+                  className="border border-black p-1/2"
+                  onClick={startEdit(p)}
+                >
                   📝
                 </button>{" "}
-                <button className="border border-black p-1/2" onClick={deleteById(p._id)}>
+                <button
+                  className="border border-black p-1/2"
+                  onClick={deleteById(p._id)}
+                >
                   ❌
                 </button>{" "}
                 <Link href={`/product/${p._id}`} className="font-bold">
